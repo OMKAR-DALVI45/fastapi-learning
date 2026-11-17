@@ -1,0 +1,20 @@
+{
+    "2": {
+        "Name": "Shubham",
+        "Marks": 83,
+        "Address": "Delhi",
+        "Placed": false
+    },
+    "3": {
+        "Name": "Sanjana",
+        "Marks": 88,
+        "Address": "Mumbai",
+        "Placed": true
+    },
+    "5": {
+        "Name": "om",
+        "Marks": 79,
+        "Address": "nagar",
+        "Placed": true
+    }
+}

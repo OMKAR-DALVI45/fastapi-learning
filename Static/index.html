@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">S</div>
+            <div>
+                <h2>StudentHub</h2>
+                <p>Management Portal</p>
+            </div>
+        </div>
+
+        <div class="nav-label">WORKSPACE</div>
+        <a class="nav-item active" href="/">
+            <span>▦</span> Dashboard
+        </a>
+
+        <div class="sidebar-note">
+            <div class="note-icon">✦</div>
+            <h3>Stay organized</h3>
+            <p>Manage student records from one simple dashboard.</p>
+        </div>
+
+        <div class="sidebar-footer">Student Management System</div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">OVERVIEW</p>
+                <h1>Student Dashboard</h1>
+                <p class="subtitle">Manage your student records in one place.</p>
+            </div>
+            <button class="primary-btn" id="addBtn">＋ Add Student</button>
+        </header>
+
+        <div id="alert" class="alert" role="status" hidden></div>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <div class="stat-icon purple">♙</div>
+                <p>Total Students</p>
+                <h2 id="totalCount">—</h2>
+                <span>All registered students</span>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon green">✓</div>
+                <p>Placed Students</p>
+                <h2 id="placedCount">—</h2>
+                <span>Students marked as placed</span>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-icon orange">★</div>
+                <p>Average Marks</p>
+                <h2 id="averageMarks">—</h2>
+                <span>Average score out of 100</span>
+            </article>
+        </section>
+
+        <section class="table-card">
+            <div class="table-heading">
+                <div>
+                    <h2>All Students</h2>
+                    <p>View and manage student information.</p>
+                </div>
+                <button id="refreshBtn" class="secondary-btn">↻ Refresh</button>
+            </div>
+
+            <div class="toolbar">
+                <div class="search-box">
+                    <span>⌕</span>
+                    <input id="searchInput" type="search"
+                           placeholder="Search by name, roll, or address...">
+                </div>
+                <span id="resultCount" class="result-count">Loading records...</span>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ROLL NO.</th>
+                            <th>STUDENT</th>
+                            <th>ADDRESS</th>
+                            <th>MARKS</th>
+                            <th>PLACEMENT</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTable">
+                        <tr>
+                            <td colspan="6" class="message-cell">
+                                Loading students...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            StudentHub <span>•</span> Powered by FastAPI
+        </footer>
+    </main>
+
+    <!-- Add/Edit form modal -->
+    <div id="studentModal" class="modal" hidden>
+        <div class="modal-backdrop" data-close="true"></div>
+        <section class="modal-panel" role="dialog"
+                 aria-modal="true" aria-labelledby="modalTitle">
+            <div class="modal-heading">
+                <div>
+                    <p class="eyebrow">STUDENT RECORD</p>
+                    <h2 id="modalTitle">Add Student</h2>
+                    <p class="subtitle">Enter the student details below.</p>
+                </div>
+                <button type="button" id="closeModal"
+                        class="icon-btn" aria-label="Close">✕</button>
+            </div>
+
+            <form id="studentForm">
+                <label for="roll">Roll Number</label>
+                <input id="roll" name="roll" type="number"
+                       min="1" step="1" required>
+
+                <label for="name">Student Name</label>
+                <input id="name" name="name" type="text"
+                       maxlength="100" placeholder="Enter full name" required>
+
+                <div class="form-row">
+                    <div>
+                        <label for="marks">Marks</label>
+                        <input id="marks" name="marks" type="number"
+                               min="0" max="100" step="any"
+                               placeholder="0–100" required>
+                    </div>
+                    <div>
+                        <label for="address">Address</label>
+                        <input id="address" name="address" type="text"
+                               maxlength="200" placeholder="City or area" required>
+                    </div>
+                </div>
+
+                <label class="checkbox-label">
+                    <input id="placed" name="placed" type="checkbox">
+                    Student is placed
+                </label>
+
+                <p id="formError" class="form-error" hidden></p>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancelBtn"
+                            class="secondary-btn">Cancel</button>
+                    <button type="submit" id="saveBtn"
+                            class="primary-btn">Save Student</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- View student modal -->
+    <div id="viewModal" class="modal" hidden>
+        <div class="modal-backdrop" data-close="true"></div>
+        <section class="modal-panel view-panel" role="dialog"
+                 aria-modal="true" aria-labelledby="viewTitle">
+            <div class="modal-heading">
+                <div>
+                    <p class="eyebrow">STUDENT DETAILS</p>
+                    <h2 id="viewTitle">Student Information</h2>
+                </div>
+                <button type="button" id="closeView"
+                        class="icon-btn" aria-label="Close">✕</button>
+            </div>
+            <div id="studentDetails" class="student-details"></div>
+            <div class="modal-actions">
+                <button type="button" id="viewDone"
+                        class="secondary-btn">Close</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/script.js" defer></script>
+</body>
+</html>
